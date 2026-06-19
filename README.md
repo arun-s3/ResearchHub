@@ -119,6 +119,11 @@ Authentication is handled using GitHub OAuth through NextAuth.
 
 Users can sign in with a single click.
 
+![Landing Page](./screenshots/landing-page1.png)
+![Landing Page](./screenshots/landing-page2.png)
+![Landing Page](./screenshots/auth.png)
+
+
 ---
 
 ### Dashboard
@@ -152,6 +157,12 @@ Each organization displays:
 - Review statistics
 - Progress indicators
 
+![Dashboard](./screenshots/dashboard1.png)
+![Dashboard](./screenshots/dashboard2.png)
+![Dashboard](./screenshots/dashboard3.png)
+![Dashboard](./screenshots/create-project.png)
+
+
 ---
 
 ### Project Workspace
@@ -173,6 +184,10 @@ Visualizations include charts:
 - Review Status Distribution bar chart
 - Priority Distribution pie chart
 - Publication Year Distribution area chart
+
+![Project workspace overview](./screenshots/project-workspace1.png)
+![Project workspace overview](./screenshots/project-workspace2.png)
+
 
 #### Articles
 
@@ -205,6 +220,12 @@ Bulk Review Actions:
 - Bulk update priority
 This reduces repetitive review work when handling large article datasets.
 
+![Project workspace articles](./screenshots/articles1.png)
+![Project workspace articles](./screenshots/articles2.png)
+![Project workspace articles](./screenshots/articles3.png)
+![Project workspace articles](./screenshots/articles4.png)
+
+
 #### Review Queue
 
 Highlights articles that need attention.
@@ -216,6 +237,9 @@ Examples include:
 - Articles requiring review decisions
 
 The goal is to reduce time spent manually identifying unfinished work.
+
+![Project workspace review queue](./screenshots/review-queue.png)
+
 
 #### Import
 
@@ -238,6 +262,10 @@ CSV Export
 
 - Exports respect the currently filtered dataset, allowing users to share or analyze review results outside the platform.
 
+![Project workspace import](./screenshots/import.png)
+![Project workspace import preview](./screenshots/import-preview.png)
+
+
 ---
 ### Project Member Management
 
@@ -248,6 +276,10 @@ Project owners can:
 - View project membership
 
 User search is debounced to reduce unnecessary requests while typing.
+
+![Project workspace member management](./screenshots/members1.png)
+![Project workspace member management](./screenshots/members2.png)
+
 
 ## Article Import Validation
 
