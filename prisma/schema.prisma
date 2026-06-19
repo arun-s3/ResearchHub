@@ -1,0 +1,169 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ProjectRole {
+  REVIEWER
+  VIEWER
+}
+
+enum ReviewStatus {
+  PENDING
+  INCLUDED
+  EXCLUDED
+  MAYBE
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model User {
+  id String @id @default(uuid())
+
+  name  String?
+  email String  @unique
+  image String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  ownedOrganizations Organization[]
+
+  ownedProjects Project[]
+
+  projectMemberships ProjectMember[]
+
+  articleReviews ArticleReview[]
+}
+
+model Organization {
+  id String @id @default(uuid())
+
+  name        String
+  description String?
+  starred     Boolean @default(false)
+
+  ownerId String
+
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  projects Project[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([ownerId])
+}
+
+model Project {
+  id String @id @default(uuid())
+
+  name        String
+  description String?
+
+  organizationId String
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  ownerId String
+
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  members ProjectMember[]
+
+  articles Article[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([organizationId])
+}
+
+model ProjectMember {
+  id String @id @default(uuid())
+
+  projectId String
+  userId    String
+
+  role ProjectRole
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  joinedAt DateTime @default(now())
+
+  @@unique([projectId, userId])
+}
+
+model Article {
+  id String @id @default(uuid())
+
+  pmid  String
+  title String
+
+  authors  String
+  citation String
+
+  firstAuthor String
+
+  journalBook String
+
+  publicationYear Int
+
+  createDate DateTime?
+
+  pmcid   String?
+  nihmsId String?
+
+  doi String
+
+  status ReviewStatus @default(PENDING)
+
+  priority Priority @default(MEDIUM)
+
+  reviewerNotes  String? 
+  decisionReason String?
+
+  projectId String
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  reviews ArticleReview[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([projectId, pmid])
+
+}
+
+model ArticleReview {
+  id String @id @default(cuid())
+
+  articleId String
+
+  reviewerId String
+
+  decision ReviewStatus
+
+  priority Priority
+
+  notes String?
+
+  reason String?
+
+  createdAt DateTime @default(now())
+
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  reviewer User @relation(fields: [reviewerId], references: [id], onDelete: Cascade)
+}
