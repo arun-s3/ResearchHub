@@ -103,6 +103,8 @@ Direct URL access to unauthorized projects is blocked even if a user manually en
 
 ## Application Walkthrough
 
+### - Complete Video walkthrough: https://youtu.be/04QArVmcOWw
+
 ### Landing Page
 
 The landing page introduces the platform and its workflow.
@@ -122,7 +124,6 @@ Users can sign in with a single click.
 ![Landing Page](./screenshots/landing-page1.png)
 ![Landing Page](./screenshots/landing-page2.png)
 ![Landing Page](./screenshots/auth.png)
-
 
 ---
 
@@ -162,7 +163,6 @@ Each organization displays:
 ![Dashboard](./screenshots/dashboard3.png)
 ![Dashboard](./screenshots/create-project.png)
 
-
 ---
 
 ### Project Workspace
@@ -188,7 +188,6 @@ Visualizations include charts:
 ![Project workspace overview](./screenshots/project-workspace1.png)
 ![Project workspace overview](./screenshots/project-workspace2.png)
 
-
 #### Articles
 
 Displays imported articles in a searchable table.
@@ -209,22 +208,21 @@ Filtering includes:
 - Status
 - Priority
 - Publication Year
-
 - Clear filters
 
 Search is available across article data.
 
 Bulk Review Actions:
+
 - Multi-select articles
 - Bulk update status
 - Bulk update priority
-This reduces repetitive review work when handling large article datasets.
+  This reduces repetitive review work when handling large article datasets.
 
 ![Project workspace articles](./screenshots/articles1.png)
 ![Project workspace articles](./screenshots/articles2.png)
 ![Project workspace articles](./screenshots/articles3.png)
 ![Project workspace articles](./screenshots/articles4.png)
-
 
 #### Review Queue
 
@@ -239,7 +237,6 @@ Examples include:
 The goal is to reduce time spent manually identifying unfinished work.
 
 ![Project workspace review queue](./screenshots/review-queue.png)
-
 
 #### Import
 
@@ -259,14 +256,13 @@ Invalid rows remain excluded until corrected.
 CSV Export
 
 - Reviewed articles can be exported as CSV.
-
 - Exports respect the currently filtered dataset, allowing users to share or analyze review results outside the platform.
 
 ![Project workspace import](./screenshots/import.png)
 ![Project workspace import preview](./screenshots/import-preview.png)
 
-
 ---
+
 ### Project Member Management
 
 Project owners can:
@@ -279,7 +275,6 @@ User search is debounced to reduce unnecessary requests while typing.
 
 ![Project workspace member management](./screenshots/members1.png)
 ![Project workspace member management](./screenshots/members2.png)
-
 
 ## Article Import Validation
 
@@ -476,6 +471,7 @@ All generated code was manually reviewed and tested before being added to the pr
 One example where AI suggestions were not used directly was authorization handling. Initial suggestions returned inconsistent response types, which were later simplified and adjusted to better fit the application's access control model.
 
 ---
+
 ## Tradeoffs
 
 To stay within the assignment scope, I intentionally prioritized:
