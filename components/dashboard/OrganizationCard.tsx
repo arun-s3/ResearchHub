@@ -1,5 +1,6 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { motion } from "framer-motion"
 
@@ -62,6 +63,8 @@ export function OrganizationCard({
     const [starred, setStarred] = useState(isStarred)
     const [showMembersModal, setShowMembersModal] = useState(false)
 
+    const router = useRouter()
+
     const { data: session } = useSession()
 
     const isOrgOwner = members.some((m) => m.id === session?.user.id && (m.role.toLowerCase() === "reviewer" || m.role.toLowerCase() === "owner"))
@@ -97,6 +100,9 @@ export function OrganizationCard({
         }
         setIsModalOpen(true)
     }
+
+    console.log("Projects received:", projects)
+console.log("Projects count:", projects.length)
 
     return (
         <>

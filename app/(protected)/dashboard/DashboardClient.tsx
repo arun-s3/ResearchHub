@@ -119,34 +119,46 @@ export default function DashboardClient({ organizations }: DashboardProps) {
     }, [organizations])
 
     // Filtering & sorting organizations 
-    const filteredAndSortedOrganizations = useMemo(() => {
-        let filtered = organizations.filter((org) => org.name.toLowerCase().includes(searchQuery.toLowerCase()))
+const filteredAndSortedOrganizations = useMemo(() => {
+    const filtered = organizations.filter((org) =>
+        org.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
 
-        switch (sortBy) {
-            case "starred":
-                filtered = filtered.sort((a, b) => {
-                    if (a.isStarred === b.isStarred) {
-                        return a.name.localeCompare(b.name)
-                    }
-                    return a.isStarred ? -1 : 1
-                })
-                break
-            case "a-z":
-                filtered = filtered.sort((a, b) => a.name.localeCompare(b.name))
-                break
-            case "z-a":
-                filtered = filtered.sort((a, b) => b.name.localeCompare(a.name))
-                break
-            case "recent":
-                filtered = filtered.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-                break
-            case "oldest":
-                filtered = filtered.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
-                break
-        }
+    const sorted = [...filtered]
 
-        return filtered
-    }, [organizations, searchQuery, sortBy])
+    switch (sortBy) {
+        case "starred":
+            sorted.sort((a, b) => {
+                if (a.isStarred === b.isStarred) {
+                    return a.name.localeCompare(b.name)
+                }
+                return a.isStarred ? -1 : 1
+            })
+            break
+
+        case "a-z":
+            sorted.sort((a, b) => a.name.localeCompare(b.name))
+            break
+
+        case "z-a":
+            sorted.sort((a, b) => b.name.localeCompare(a.name))
+            break
+
+        case "recent":
+            sorted.sort(
+                (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            )
+            break
+
+        case "oldest":
+            sorted.sort(
+                (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+            )
+            break
+    }
+
+    return sorted
+}, [organizations, searchQuery, sortBy])
 
     const handleOpenProject = useCallback(
         (projectId: string) => {
@@ -373,6 +385,7 @@ export default function DashboardClient({ organizations }: DashboardProps) {
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ duration: 0.4, delay: index * 0.05 }}>
                                         <OrganizationCard
+                                            key={`${organization.id}-${organization.projects.length}`}
                                             organizationId={organization.id}
                                             organizationName={organization.name}
                                             organizationDesc={organization.description}
