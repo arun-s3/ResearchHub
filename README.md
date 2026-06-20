@@ -29,6 +29,14 @@ The goal was to provide a practical workflow for screening and reviewing researc
 
 ---
 
+## Live Demo
+
+http://13.207.212.92
+
+## Video Walkthrough
+
+https://youtu.be/04QArVmcOWw
+
 ## Review Workflow
 
 I chose a simple review workflow based on common article screening stages.
@@ -103,7 +111,7 @@ Direct URL access to unauthorized projects is blocked even if a user manually en
 
 ## Application Walkthrough
 
-### - Complete Video walkthrough: https://youtu.be/04QArVmcOWw
+###### * Complete Video walkthrough: https://youtu.be/04QArVmcOWw
 
 ### Landing Page
 
@@ -350,6 +358,30 @@ Article → Reviews
 The model separates article metadata from review activity and keeps permissions scoped at the project level.
 
 ---
+
+## Live Deployment
+
+The application is deployed on AWS using the following setup:
+
+- EC2 instance (Ubuntu)
+- Nginx reverse proxy (port 80 → 3000)
+- PM2 process manager for Next.js
+- Amazon RDS (PostgreSQL)
+- GitHub OAuth (NextAuth)
+
+### Production URL
+
+http://13.207.212.92
+
+### Deployment Notes
+
+- The application (Next.js frontend + API routes) is deployed and running directly on the EC2 instance
+- Environment variables are managed on the EC2 instance
+- The application runs using PM2 in production mode
+- Nginx is used as a reverse proxy to expose the application on port 80
+- PostgreSQL database is hosted on AWS RDS
+- Environment variables are managed directly on the EC2 instance
+- GitHub OAuth callback is configured for production domain
 
 ## Technical Stack
 

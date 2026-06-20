@@ -49,7 +49,6 @@ interface DashboardProps {
 type SortOption = "starred" | "a-z" | "z-a" | "recent" | "oldest"
 
 export default function DashboardClient({ organizations }: DashboardProps) {
-
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [loadingOrgId, setLoadingOrgId] = useState<string | null>(null)
     const [error, setError] = useState<string | null>(null)
@@ -118,47 +117,41 @@ export default function DashboardClient({ organizations }: DashboardProps) {
         return projects.sort((a, b) => (b as any).lastOpenedAt - (a as any).lastOpenedAt).slice(0, 3)
     }, [organizations])
 
-    // Filtering & sorting organizations 
-const filteredAndSortedOrganizations = useMemo(() => {
-    const filtered = organizations.filter((org) =>
-        org.name.toLowerCase().includes(searchQuery.toLowerCase())
-    )
+    // Filtering & sorting organizations
+    const filteredAndSortedOrganizations = useMemo(() => {
+        const filtered = organizations.filter((org) => org.name.toLowerCase().includes(searchQuery.toLowerCase()))
 
-    const sorted = [...filtered]
+        const sorted = [...filtered]
 
-    switch (sortBy) {
-        case "starred":
-            sorted.sort((a, b) => {
-                if (a.isStarred === b.isStarred) {
-                    return a.name.localeCompare(b.name)
-                }
-                return a.isStarred ? -1 : 1
-            })
-            break
+        switch (sortBy) {
+            case "starred":
+                sorted.sort((a, b) => {
+                    if (a.isStarred === b.isStarred) {
+                        return a.name.localeCompare(b.name)
+                    }
+                    return a.isStarred ? -1 : 1
+                })
+                break
 
-        case "a-z":
-            sorted.sort((a, b) => a.name.localeCompare(b.name))
-            break
+            case "a-z":
+                sorted.sort((a, b) => a.name.localeCompare(b.name))
+                break
 
-        case "z-a":
-            sorted.sort((a, b) => b.name.localeCompare(a.name))
-            break
+            case "z-a":
+                sorted.sort((a, b) => b.name.localeCompare(a.name))
+                break
 
-        case "recent":
-            sorted.sort(
-                (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-            )
-            break
+            case "recent":
+                sorted.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                break
 
-        case "oldest":
-            sorted.sort(
-                (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-            )
-            break
-    }
+            case "oldest":
+                sorted.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+                break
+        }
 
-    return sorted
-}, [organizations, searchQuery, sortBy])
+        return sorted
+    }, [organizations, searchQuery, sortBy])
 
     const handleOpenProject = useCallback(
         (projectId: string) => {
@@ -198,7 +191,6 @@ const filteredAndSortedOrganizations = useMemo(() => {
             <main className='mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8'>
                 <div className='grid gap-8 lg:grid-cols-3'>
                     <div className='lg:col-span-2 space-y-8'>
-
                         <motion.div
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -305,8 +297,7 @@ const filteredAndSortedOrganizations = useMemo(() => {
                                     }
                                     transition={{ duration: 0.15 }}
                                     className={`absolute right-0 top-full z-50 mt-2 w-56 rounded-lg border border-amber-100 bg-white 
-                                        shadow-lg ${ showSortMenu ? "block" : "hidden"
-                                    }`}>
+                                        shadow-lg ${showSortMenu ? "block" : "hidden"}`}>
                                     {sortOptions.map((option) => (
                                         <motion.button
                                             key={option.value}
@@ -317,10 +308,10 @@ const filteredAndSortedOrganizations = useMemo(() => {
                                             }}
                                             className={`block w-full px-4 py-3 text-left text-sm transition-colors first:rounded-t-lg 
                                                 last:rounded-b-lg ${
-                                                sortBy === option.value
-                                                    ? "bg-teal-50 font-semibold text-teal-600"
-                                                    : "text-slate-700"
-                                            }`}>
+                                                    sortBy === option.value
+                                                        ? "bg-teal-50 font-semibold text-teal-600"
+                                                        : "text-slate-700"
+                                                }`}>
                                             {option.label}
                                         </motion.button>
                                     ))}
@@ -443,7 +434,6 @@ const filteredAndSortedOrganizations = useMemo(() => {
                 organizationName={null}
                 resourceType='organization'
             />
-
         </div>
     )
 }
