@@ -29,7 +29,7 @@ The goal was to provide a practical workflow for screening and reviewing researc
 
 ---
 
-## Live Demo
+## Live Application
 
 http://13.207.212.92
 
