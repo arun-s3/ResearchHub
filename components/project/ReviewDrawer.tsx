@@ -44,7 +44,6 @@ export function ReviewDrawer({ orgId, projectId, article, isProjectReviewer, isO
 
     useEffect(() => {
         if (article) {
-            console.log("article--->", article)
             setNotes(article.reviewerNotes || "")
             setReason(article.decisionReason || "")
         }

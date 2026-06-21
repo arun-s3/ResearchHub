@@ -93,7 +93,6 @@ export function OrganizationCard({
     }
 
     const handleCreateProject = ()=> {
-        console.log("members---->", members)
         if (!isOrgOwner) {
             toast.error("You don't have permissions to create any project under this organization!")
             return
@@ -101,8 +100,6 @@ export function OrganizationCard({
         setIsModalOpen(true)
     }
 
-    console.log("Projects received:", projects)
-console.log("Projects count:", projects.length)
 
     return (
         <>

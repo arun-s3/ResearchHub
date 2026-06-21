@@ -92,7 +92,6 @@ export async function verifyProjectEditAccess(projectId: string, userId: string)
     })
 
     if (!project) {
-        console.log("You do not have permission to modify articles")
         return {
             success: false,
             message: "You do not have permission to modify articles",

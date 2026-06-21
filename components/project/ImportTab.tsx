@@ -8,7 +8,7 @@ import { motion } from "framer-motion"
 import { useSession } from "next-auth/react"
 import { toast } from "sonner"
 
-import { Upload, CheckCircle, AlertCircle, Copy } from "lucide-react"
+import { Upload, CheckCircle, AlertCircle, TriangleAlert, Copy } from "lucide-react"
 
 import { importArticles } from "@/app/actions/article.actions"
 
@@ -52,8 +52,12 @@ const REQUIRED_COLUMNS = ["PMID", "Title", "Authors", "First Author", "Journal/B
 
 export function ImportTab({ orgId, projectId, members }: ImportTabProps) {
     const [isDragging, setIsDragging] = useState(false)
-    const [importStep, setImportStep] = useState<"upload" | "preview" | "complete">("upload")
+    const [importStep, setImportStep] = useState<"upload" | "preview" | "complete" | "notImported">("upload")
     const [importedRows, setImportedRows] = useState<ImportRow[]>([])
+
+    const [importedArticles, setImportedArticles] = useState(0)
+    const [skippedArticles, setSkippedArticles] = useState(0)
+
     const fileInputRef = useRef<HTMLInputElement>(null)
 
     const { data: session } = useSession()
@@ -240,10 +244,17 @@ export function ImportTab({ orgId, projectId, members }: ImportTabProps) {
         doi: row.data["DOI"] || undefined,
     }))
 
+
     const handleImportValid = async () => {
         try {
             const result = await importArticles(orgId, projectId, articlesToImport)
-            setImportStep("complete")
+
+            setImportedArticles(result.imported)
+            setSkippedArticles(result.skipped)
+
+            if (result.imported === 0) {
+                setImportStep("notImported")
+            } else setImportStep("complete")
         } catch (error) {
             console.error(error)
         }
@@ -469,14 +480,31 @@ export function ImportTab({ orgId, projectId, members }: ImportTabProps) {
                 animate={{ scale: [1, 1.1, 1] }}
                 transition={{ duration: 2, repeat: Infinity }}
                 className='flex justify-center mb-6'>
-                <div className='rounded-full bg-green-100 p-6'>
-                    <CheckCircle size={48} className='text-green-600' />
+                <div className={`rounded-full ${importStep === 'complete' ? 'bg-green-100' : 'bg-yellow-100'} p-6`}> 
+                    {
+                        importStep === 'complete' 
+                            ? <CheckCircle size={48} className='text-green-600' />
+                            : importStep === 'notImported'
+                            && <TriangleAlert size={48} className='text-yellow-300' />
+                    }
                 </div>
             </motion.div>
-            <h3 className='text-2xl font-bold text-slate-900 mb-2'>Import Complete!</h3>
+            <h3 className='text-2xl font-bold text-slate-900 mb-2'>
+                {
+                    importStep === 'complete' 
+                        ? 'Import Complete!'
+                        : importStep === 'notImported' && 'All Articles Already Exist'
+                }
+            </h3>
             <p className='text-slate-600 mb-8'>
-                Successfully imported {validRows.length} article{validRows.length !== 1 ? "s" : ""}. They are now
-                available in the Articles tab for review.
+                {
+                    importStep === 'complete' 
+                        ?  `Successfully imported ${importedArticles} article${importedArticles !== 1 ? "s" : ""}.
+                            ${skippedArticles > 0 ? `${skippedArticles} articles already exist in this project and were skipped.` : ''} 
+                            They are now available in the Articles tab for review.`
+                        : importStep === 'notImported' 
+                        && `All ${skippedArticles} articles in the uploaded file already exist in this project`
+                }
             </p>
             <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -486,7 +514,11 @@ export function ImportTab({ orgId, projectId, members }: ImportTabProps) {
                     setImportedRows([])
                 }}
                 className='px-6 py-3 rounded-lg bg-teal-600 text-white font-medium hover:bg-teal-700 transition-colors'>
-                Import More Articles
+                {
+                    importStep === 'complete' 
+                        ? 'Import More Articles'
+                        : importStep === 'notImported' && 'Import New Articles'
+                }
             </motion.button>
         </motion.div>
     )

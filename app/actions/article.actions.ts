@@ -46,20 +46,18 @@ export async function importArticles(orgId: string, projectId: string, articles:
         projectId,
     }))
 
-    console.log("DATA TO INSERT:")
-    console.dir(dataToInsert[0], { depth: null })
+    // console.log("DATA TO INSERT:")
+    // console.dir(dataToInsert[0], { depth: null })
 
-    console.log({
-        totalIncoming: articles.length,
-        existing: existingPmids.size,
-        newArticles: newArticles.length,
-    })
+    // console.log({
+    //     totalIncoming: articles.length,
+    //     existing: existingPmids.size,
+    //     newArticles: newArticles.length,
+    // })
 
     await prisma.article.createMany({
         data: dataToInsert as any,
     })
-
-    console.log(newArticles[0])
 
     revalidatePath(`/org/${orgId}/projects/${projectId}`)
 
@@ -84,10 +82,7 @@ interface UpdateArticleReviewInput {
 export async function updateArticleReview(input: UpdateArticleReviewInput) {
     const session = await getServerSession(authOptions)
 
-    console.log("Inside updateArticleReview()")
-
     if (!session?.user?.id) {
-        console.log("No session id")
         return {
             success: false,
             message: "Unauthorized",
@@ -98,7 +93,6 @@ export async function updateArticleReview(input: UpdateArticleReviewInput) {
     const access = await verifyProjectEditAccess(input.projectId, session.user.id)
 
     if (!access.success) {
-        console.log("No access")
         return access
     }
 
