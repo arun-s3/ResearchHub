@@ -606,8 +606,8 @@ Authentication is handled through GitHub OAuth using NextAuth.
 Create a GitHub OAuth Application and provide the following values in your `.env` file:
 
 ```env
-AUTH_GITHUB_ID=
-AUTH_GITHUB_SECRET=
+GITHUB_ID=
+GITHUB_SECRET=
 ```
 
 After configuration, sign in using GitHub from the landing page.
