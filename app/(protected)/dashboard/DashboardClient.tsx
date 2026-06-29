@@ -382,7 +382,6 @@ export default function DashboardClient({ organizations }: DashboardProps) {
                                             organizationDesc={organization.description}
                                             projects={organization.projects}
                                             members={organization.members}
-                                            currentUserId={userName}
                                             memberCount={organization.memberCount}
                                             isStarred={organization.isStarred}
                                             onOpenProject={handleOpenProject}

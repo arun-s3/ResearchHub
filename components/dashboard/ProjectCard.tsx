@@ -7,6 +7,9 @@ import { ArrowRight, FileText, Users } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { toast } from "sonner"
 
+import { verifyProjectAccessAction } from "@/app/actions/project.actions"
+
+
 interface Member {
     id: string
     name: string
@@ -46,11 +49,12 @@ export function ProjectCard({
 
     const { data: session } = useSession()
 
-    const isProjectMember = members.some((m) => m.id === session?.user.id)
+    const handleOpenProject = async() => {
 
-    const handleOpenProject = () => {
-        if (!isProjectMember) {
-            toast.error("You don't have permission to access this project because you're not a member of this project!")
+        const result = await verifyProjectAccessAction(projectId)
+
+        if (!result.success) {
+            toast.error(result.message)
             return
         }
         onOpenClick?.(projectId)

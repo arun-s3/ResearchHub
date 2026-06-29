@@ -82,20 +82,22 @@ export async function getDashboardOrganizations(userId: string) {
         // Add all unique project members
         for (const project of org.projects) {
             for (const member of project.members) {
-                uniqueMembers.set(member.user.id, {
-                    id: member.user.id,
-                    name: member.user.name,
-                    image: member.user.image,
+                if(!uniqueMembers.has(member.user.id)) {
+                    uniqueMembers.set(member.user.id, {
+                        id: member.user.id,
+                        name: member.user.name,
+                        image: member.user.image,
 
-                    avatar:
-                        member.user.name
-                            ?.split(" ")
-                            .map((n) => n[0])
-                            .join("")
-                            .toUpperCase() ?? "",
+                        avatar:
+                            member.user.name
+                                ?.split(" ")
+                                .map((n) => n[0])
+                                .join("")
+                                .toUpperCase() ?? "",
 
-                    role: member.role.toLowerCase(),
-                })
+                        role: member.role.toLowerCase(),
+                    })
+                }
             }
         }
 

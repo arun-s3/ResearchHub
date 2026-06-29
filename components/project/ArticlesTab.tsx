@@ -56,10 +56,9 @@ interface ArticlesTabProps {
     projectId: string
     isProjectReviewer: boolean
     articles: Article[]
-    onArticleSelected?: (articleId: string) => void
 }
 
-export function ArticlesTab({ orgId, projectId, isProjectReviewer, articles, onArticleSelected }: ArticlesTabProps) {
+export function ArticlesTab({ orgId, projectId, isProjectReviewer, articles }: ArticlesTabProps) {
     const [searchTerm, setSearchTerm] = useState("")
     const [statusFilter, setStatusFilter] = useState<FilterStatus>("all")
     const [yearFilter, setYearFilter] = useState<number | null>(null)
@@ -231,7 +230,6 @@ export function ArticlesTab({ orgId, projectId, isProjectReviewer, articles, onA
     const handleOpenArticle = (article: Article) => {
         setSelectedArticle(article)
         setIsDrawerOpen(true)
-        onArticleSelected?.(article.id)
     }
 
     const SortButton = ({ field, label }: { field: SortField; label: string }) => (

@@ -1,6 +1,5 @@
 "use client"
 
-import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { motion } from "framer-motion"
 
@@ -39,7 +38,6 @@ interface OrganizationCardProps {
     organizationDesc: string
     projects: Project[]
     members?: Member[]
-    currentUserId?: string
     memberCount?: number
     isStarred?: boolean
     onOpenProject: (projectId: string) => void
@@ -52,22 +50,18 @@ export function OrganizationCard({
     organizationDesc,
     projects,
     members = [],
-    currentUserId,
     memberCount = 0,
     isStarred = false,
     onOpenProject,
     isLoading = false,
 }: OrganizationCardProps) {
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const [isCreating, setIsCreating] = useState(false)
     const [starred, setStarred] = useState(isStarred)
     const [showMembersModal, setShowMembersModal] = useState(false)
 
-    const router = useRouter()
-
     const { data: session } = useSession()
 
-    const isOrgOwner = members.some((m) => m.id === session?.user.id && (m.role.toLowerCase() === "reviewer" || m.role.toLowerCase() === "owner"))
+    const isOrgOwner = members.some((m) => m.id === session?.user.id && m.role.toLowerCase() === "owner")
 
     const container = {
         hidden: { opacity: 0 },
@@ -88,7 +82,6 @@ export function OrganizationCard({
             return
         }
 
-        toast.success(result.message)
         setStarred(!starred)
     }
 
@@ -145,7 +138,7 @@ export function OrganizationCard({
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={handleCreateProject}
-                            disabled={isLoading || isCreating}
+                            disabled={isLoading}
                             className='flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 font-medium text-white 
                                 transition-colors hover:bg-teal-700 disabled:opacity-50 shadow-md cursor-pointer'>
                             <Plus size={16} />

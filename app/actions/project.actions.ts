@@ -9,6 +9,7 @@ import { prisma } from "@/app/lib/prisma"
 import { ProjectRole } from "@prisma/client"
 
 import { verifyOrganizationOwner } from "@/app/lib/authorization"
+import { verifyProjectAccess } from "@/app/lib/authorization"
 
 interface errorObj {
     success: boolean
@@ -82,6 +83,21 @@ interface AssignProjectMemberInput {
     projectId: string
     userId: string
     role: ProjectRole
+}
+
+export async function verifyProjectAccessAction(projectId: string) {
+
+    const session = await getServerSession(authOptions)
+
+    if (!session?.user?.id) {
+        return {
+            success: false,
+            message: "Unauthorized",
+            data: null
+        }
+    }
+
+    return await verifyProjectAccess( projectId, session.user.id )
 }
 
 export async function assignProjectMember(input: AssignProjectMemberInput) {

@@ -27,11 +27,6 @@ interface ProjectMembersWidgetProps {
 
 export function ProjectMembersWidget({ orgId, projectId, members, projectName }: ProjectMembersWidgetProps) {
     const [isAddModalOpen, setIsAddModalOpen] = useState(false)
-    const [addedMembers, setAddedMembers] = useState<Set<string>>(new Set())
-
-    const handleAddMember = (userId: string, role: "reviewer" | "viewer") => {
-        setAddedMembers((prev) => new Set([...prev, userId]))
-    }
 
     const { data: session } = useSession()
 
@@ -177,7 +172,6 @@ export function ProjectMembersWidget({ orgId, projectId, members, projectName }:
                 projectId={projectId}
                 isOpen={isAddModalOpen}
                 onClose={() => setIsAddModalOpen(false)}
-                onAddMember={handleAddMember}
             />
         </>
     )

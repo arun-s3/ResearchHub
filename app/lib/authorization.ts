@@ -59,12 +59,14 @@ export async function verifyProjectAccess(projectId: string, userId: string) {
         return {
             success: false,
             message: "Access denied",
+            data: null
         }
     }
 
     return {
         success: true,
-        project,
+        message: null,
+        data: project
     }
 }
 

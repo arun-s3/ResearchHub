@@ -10,7 +10,6 @@ import { toast } from "sonner"
 import Portal from "@/components/ui/Portal"
 
 import { searchUsers } from "@/app/actions/user.actions"
-import { ProjectRole } from "@prisma/client"
 import { assignProjectMember } from "@/app/actions/project.actions"
 
 interface AddMemberModalProps {
@@ -18,7 +17,6 @@ interface AddMemberModalProps {
     onClose: () => void
     projectId: string
     orgId: string
-    onAddMember?: (userId: string, role: "reviewer" | "viewer") => void
 }
 
 interface UserType {
@@ -30,10 +28,10 @@ interface UserType {
     updatedAt: Date
 }
 
-export function AddMemberModal({ isOpen, onClose, orgId, projectId, onAddMember }: AddMemberModalProps) {
+export function AddMemberModal({ isOpen, onClose, orgId, projectId }: AddMemberModalProps) {
     const [searchQuery, setSearchQuery] = useState("")
     const [users, setUsers] = useState<UserType[]>([])
-    const [selectedRole, setSelectedRole] = useState<"reviewer" | "viewer">("reviewer")
+    const [selectedRole, setSelectedRole] = useState<"reviewer" | "viewer">("viewer")
     const [selectedUser, setSelectedUser] = useState<string | null>(null)
     const [addedMembers, setAddedMembers] = useState<Set<string>>(new Set())
 
@@ -64,17 +62,17 @@ export function AddMemberModal({ isOpen, onClose, orgId, projectId, onAddMember 
     }
 
     const handleAddMember = async (userId: string) => {
+        type roles = 'REVIEWER' | 'VIEWER'
         const access = await assignProjectMember({
             orgId,
             projectId,
             userId,
-            role: ProjectRole.VIEWER,
+            role: selectedRole.toUpperCase() as roles,
         })
         if (!access.success) {
             toast.error(access.message)
         }
         setAddedMembers((prev) => new Set([...prev, userId]))
-        onAddMember?.(userId, selectedRole)
         setSelectedUser(null)
         setSearchQuery("")
     }

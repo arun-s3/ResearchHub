@@ -1,10 +1,39 @@
 import { NextResponse } from "next/server"
 import * as XLSX from "xlsx"
 
-import { prisma } from "@/app/lib/prisma"
+import { authOptions } from "@/app/lib/auth"
+import { getServerSession } from "next-auth"
 
-export async function GET() {
+import { prisma } from "@/app/lib/prisma"
+import { verifyProjectAccess } from "@/app/lib/authorization"
+
+
+interface RouteProps {
+    params: Promise<{
+        projectId: string
+    }>
+}
+
+export async function GET(request: Request, { params }: RouteProps) {
+    
+    const { projectId } = await params
+
+    const session = await getServerSession(authOptions)
+
+    if (!session?.user?.id) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
+    const project = await verifyProjectAccess(projectId, session.user.id)
+
+    if (!project) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    }
+
     const articles = await prisma.article.findMany({
+        where: {
+            projectId,
+        },
         orderBy: {
             createdAt: "desc",
         },
@@ -37,7 +66,7 @@ export async function GET() {
     return new NextResponse(buffer, {
         headers: {
             "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            "Content-Disposition": 'attachment; filename="articles.xlsx"',
+            "Content-Disposition": `attachment; filename="articles.xlsx"`,
         },
     })
 }

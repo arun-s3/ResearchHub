@@ -48,7 +48,6 @@ interface OverviewTabProps {
         progressPercentage: number
     }
     articles: Article[]
-    projectName: string
 }
 
 const COLORS = {
@@ -61,7 +60,7 @@ const COLORS = {
     low: "#84cc16",
 }
 
-export function ProjectOverviewTab({ stats, articles, projectName }: OverviewTabProps) {
+export function ProjectOverviewTab({ stats, articles }: OverviewTabProps) {
     const reviewStatusData = [
         {
             name: "Included",

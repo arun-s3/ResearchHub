@@ -249,10 +249,20 @@ export function ImportTab({ orgId, projectId, members }: ImportTabProps) {
         try {
             const result = await importArticles(orgId, projectId, articlesToImport)
 
-            setImportedArticles(result.imported)
-            setSkippedArticles(result.skipped)
+            if (!result.success) {
+                toast.error(result.message)
+                return
+            }
 
-            if (result.imported === 0) {
+            const data = result.data as {
+                imported: number
+                skipped: number
+            }
+
+            setImportedArticles(data.imported)
+            setSkippedArticles(data.skipped)
+
+            if (data.imported === 0) {
                 setImportStep("notImported")
             } else setImportStep("complete")
         } catch (error) {
@@ -283,7 +293,13 @@ export function ImportTab({ orgId, projectId, members }: ImportTabProps) {
                         <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            onClick={() => fileInputRef.current?.click()}
+                            onClick={() => {
+                                if (!isOwner) {
+                                    toast.error("Sorry, only the owner of this project are allowed to upload!")
+                                    return
+                                }
+                                fileInputRef.current?.click()
+                            }}
                             className='inline-block px-6 py-3 rounded-lg bg-teal-600 text-white font-medium hover:bg-teal-700 
                                 transition-colors cursor-pointer'>
                             Select File

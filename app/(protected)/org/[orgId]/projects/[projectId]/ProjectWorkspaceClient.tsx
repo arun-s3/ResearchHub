@@ -79,7 +79,7 @@ export function ProjectWorkspaceClient({
         const totalArticles = articles.length
         const totalIncluded = articles.filter((a) => a.status === "included").length
         const totalExcluded = articles.filter((a) => a.status === "excluded").length
-        const totalPending = articles.filter((a) => a.status === "pending" || a.status === "maybe").length
+        const totalPending = articles.filter((a) => a.status === "pending").length
         const reviewedCount = totalIncluded + totalExcluded
         const progressPercentage = totalArticles > 0 ? Math.round((reviewedCount / totalArticles) * 100) : 0
 
@@ -116,8 +116,29 @@ export function ProjectWorkspaceClient({
         { id: "import", label: "Import" },
     ]
     
-    const handleExport = ()=> {
-        window.location.href = "/api/articles/export"
+    const handleExport = async () => {
+        try {
+            const response = await fetch(`/api/projects/${project.id}/export`)
+
+            if (!response.ok) {
+                const error = await response.json()
+                toast.error(error.error)
+                return
+            }
+
+            const blob = await response.blob()
+
+            const url = window.URL.createObjectURL(blob)
+
+            const a = document.createElement("a")
+            a.href = url
+            a.download = "articles.xlsx"
+            a.click()
+
+            window.URL.revokeObjectURL(url)
+        } catch {
+            toast.error("Something went wrong.")
+        }
     }
 
 
@@ -187,7 +208,7 @@ export function ProjectWorkspaceClient({
                 <div className='grid grid-cols-1 lg:grid-cols-4 gap-6'>
                     <div className='lg:col-span-3'>
                         {activeTab === "overview" && (
-                            <ProjectOverviewTab stats={stats} articles={articles} projectName={project.name} />
+                            <ProjectOverviewTab stats={stats} articles={articles} />
                         )}
                         {activeTab === "articles" && (
                             <ArticlesTab
@@ -195,8 +216,6 @@ export function ProjectWorkspaceClient({
                                 projectId={project.id}
                                 isProjectReviewer={isProjectReviewer}
                                 articles={articles}
-                                onArticleSelected={(articleId) => {
-                                }}
                             />
                         )}
                         {activeTab === "review-queue" && (

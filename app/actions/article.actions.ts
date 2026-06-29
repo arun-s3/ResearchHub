@@ -7,6 +7,7 @@ import { authOptions } from "@/app/lib/auth"
 import { getServerSession } from "next-auth"
 
 import { verifyProjectEditAccess } from "@/app/lib/authorization"
+import { verifyOrganizationOwner } from "@/app/lib/authorization"
 
 import { Priority, ReviewStatus } from "@prisma/client"
 
@@ -25,6 +26,22 @@ interface ImportArticleInput {
 }
 
 export async function importArticles(orgId: string, projectId: string, articles: ImportArticleInput[]) {
+    const session = await getServerSession(authOptions)
+
+    if (!session?.user?.id) {
+        return {
+            success: false,
+            message: "Unauthorized",
+            data: null,
+        }
+    }
+
+    const access = await verifyOrganizationOwner(orgId, session.user.id)
+
+    if (!access.success) {
+        return access
+    }
+
     const existingArticles = await prisma.article.findMany({
         where: {
             projectId,
@@ -61,10 +78,22 @@ export async function importArticles(orgId: string, projectId: string, articles:
 
     revalidatePath(`/org/${orgId}/projects/${projectId}`)
 
-    return {
-        success: true,
+    const data = {
         imported: newArticles.length,
         skipped: existingPmids.size,
+    }
+
+    return {
+        success: true,
+        message: null,
+        data,
+    } as {
+        success: true
+        message: null
+        data: {
+            imported: number
+            skipped: number
+        }
     }
 }
 
