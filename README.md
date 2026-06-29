@@ -31,7 +31,8 @@ The goal was to provide a practical workflow for screening and reviewing researc
 
 ## Live Application
 
-http://13.207.212.92
+- **Primary (HTTPS):** https://researchhub.home.kg
+- **Alternate (IP):** http://13.207.212.92
 
 ## Video Walkthrough
 
