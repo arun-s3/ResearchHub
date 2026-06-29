@@ -8,6 +8,30 @@ The application was built as a take-home assignment for EasySLR with a focus on 
 
 ---
 
+## Table of Contents
+
+* [Project Overview](#project-overview)
+* [Live Application](#live-application)
+* [Video Walkthrough](#video-walkthrough)
+* [Review Workflow](#review-workflow)
+* [Permission Model](#permission-model)
+* [Application Walkthrough With Images](#application-walkthrough-with-images)
+* [Article Import Validation](#article-import-validation)
+* [Data Model](#data-model)
+* [Live Deployment](#live-deployment)
+* [Technical Stack](#technical-stack)
+* [Architecture](#architecture)
+* [Loading, Empty and Error States](#loading-empty-and-error-states)
+* [Time Spent](#time-spent)
+* [AI Usage](#ai-usage)
+* [Tradeoffs](#tradeoffs)
+* [Future Improvements](#future-improvements)
+* [Local Setup](#local-setup)
+* [Notes](#notes)
+* [Feedback](#feedback)
+
+---
+
 ## Project Overview
 
 ResearchHub is organized around four core concepts:
@@ -110,7 +134,7 @@ Direct URL access to unauthorized projects is blocked even if a user manually en
 
 ---
 
-## Application Walkthrough
+## Application Walkthrough With Images
 
 ###### * Complete Video walkthrough: https://youtu.be/04QArVmcOWw
 
@@ -415,7 +439,100 @@ http://13.207.212.92
 
 ---
 
-## Architecture Notes
+## Architecture
+
+### High-Level Request Flow
+
+```text
+Client Components
+        │
+        ▼
+App Router (Pages & Layouts)
+        │
+        ├───────────────┐
+        ▼               ▼
+ Server Actions     Route Handlers
+ (Business Logic)   (API Endpoints)
+        │
+        ▼
+ Authorization Layer
+        │
+        ▼
+     Prisma ORM
+        │
+        ▼
+    PostgreSQL
+```
+
+The application follows a feature-oriented architecture where UI, business logic, authorization, and data access are separated to keep the codebase modular, maintainable, and scalable.
+
+### Authentication Flow
+
+```text
+GitHub OAuth
+      │
+      ▼
+NextAuth
+      │
+      ▼
+Session
+      │
+      ▼
+Protected Routes
+      │
+      ▼
+Server Actions / Route Handlers
+```
+
+Authentication is handled using GitHub OAuth through NextAuth, with protected routes and server-side authorization ensuring only authenticated users can access secured resources.
+
+### Authorization Flow
+
+```text
+Client Request
+      │
+      ▼
+Server Action
+      │
+      ▼
+Authorization Layer
+      │
+      ▼
+verifyOrganizationOwner()
+verifyProjectAccess()
+verifyProjectEditAccess()
+      │
+      ▼
+Prisma ORM
+      │
+      ▼
+PostgreSQL
+```
+
+Authorization is centralized through reusable helper functions to enforce ownership and role-based access control before any database operation is performed.
+
+### Folder Organization
+
+| Folder           | Responsibility                                                                                                                                                               |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `app/`         | App Router pages, layouts, protected routes, and dynamic route segments that define the application's navigation structure.                                                  |
+| `app/actions/` | Server Actions containing business logic for CRUD operations, authorization checks, cache revalidation, and server-side workflows.                                           |
+| `app/api/`     | Route Handlers for endpoints such as GitHub OAuth callbacks and Excel export functionality.                                                                                  |
+| `app/lib/`     | Shared server-side utilities including authentication configuration, authorization helpers, and the Prisma client.                                                           |
+| `components/`  | Feature-based reusable UI components organized into `auth`, `dashboard`, `home`, `project`, `layout`, `shared` & `ui`, with nested folders such as `modals`. |
+| `services/`    | Shared service layer for data transformation and aggregation logic (`dashboard.service.ts`, `project.service.ts`).                                                       |
+| `types/`       | Shared TypeScript declarations and custom type definitions.                                                                                                                  |
+| `prisma/`      | Prisma schema and database migrations.                                                                                                                                       |
+| `public/`      | Static assets served by the application (images, icons, etc.).                                                                                                               |
+| `screenshots/` | Screenshots used for documentation within the README.                                                                                                                        |
+
+### Core Design Principles
+
+* Feature-oriented folder organization.
+* Business logic handled through Server Actions.
+* Centralized role-based authorization.
+* Type-safe database access using Prisma ORM.
+* Clear separation between UI, business logic, and persistence.
 
 A few implementation decisions:
 
@@ -529,10 +646,12 @@ If given additional time, I would focus on:
 
 - Real-time collaborations
 - Review history timeline
+- Saved search filters
 - Activity audit logs
 - Email notifications
 - End-to-end testing
-- AI assisted reviewing, automatic article summaries,s uggested inclusion/exclusion decisions, extraction of key study information, similar article recommendations, AI-generated reviewer notes
+- AI assisted reviewing, automatic article summaries,suggested inclusion/exclusion decisions, extraction of key study information, similar article recommendations, AI-generated reviewer notes
+- Reviewer workload balancing
 - AI Reviewer: can suggest statuses, priorities, and notes for human approval.
 - AI Viewer: can analyze project data and generate insights without modifying review decisions.
 
@@ -540,7 +659,7 @@ If given additional time, I would focus on:
 
 ## Local Setup
 
-### Clone Repository
+### 1. Clone Repository
 
 ```bash
 git clone <repository-url>
@@ -552,7 +671,7 @@ cd researchhub
 npm install
 ```
 
-### 3. Create Environment Variables
+### 2. Create Environment Variables
 
 Create a `.env` file in the project root.
 
@@ -565,7 +684,7 @@ GITHUB_ID=
 GITHUB_SECRET=
 ```
 
-### 4. Configure PostgreSQL
+### 3. Configure PostgreSQL
 
 Create a PostgreSQL database and update `DATABASE_URL` accordingly.
 
@@ -575,7 +694,7 @@ Example:
 DATABASE_URL="postgresql://username:password@localhost:5432/researchhub"
 ```
 
-### 5. Run Prisma Migrations
+### 4. Run Prisma Migrations
 
 ```bash
 npx prisma migrate dev
@@ -587,7 +706,7 @@ Generate the Prisma Client:
 npx prisma generate
 ```
 
-### 6. Start the Development Server
+### 5. Start the Development Server
 
 ```bash
 npm run dev
@@ -599,7 +718,7 @@ Open:
 http://localhost:3000
 ```
 
-### 7. Configure GitHub Authentication
+### 6. Configure GitHub Authentication
 
 Authentication is handled through GitHub OAuth using NextAuth.
 
@@ -618,3 +737,15 @@ After configuration, sign in using GitHub from the landing page.
 
 * Prisma migrations are included in the repository.
 * PostgreSQL is required for local development.
+
+---
+
+## Feedback
+
+If you encounter any issues during setup or have questions about the implementation, feel free to reach out.
+
+- Email: arunsudhakaran01@gmail.com
+- Phone: 9074688913
+- LinkedIn: https://www.linkedin.com/in/arun-s1
+
+I also welcome any feedback or suggestions for improving the project. Your insights are greatly appreciated and will help me continue refining both the application and my engineering practices. Feedback has consistently played an important role in helping me grow as an engineer and build better software, so I truly appreciate every opportunity to learn from it.
