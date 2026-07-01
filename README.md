@@ -1,10 +1,8 @@
 # ResearchHub
 
-A project-based article review workspace inspired by systematic literature review workflows.
+A project-based article review workspace inspired by systematic research & review workflows.
 
-ResearchHub allows teams to organize research articles inside projects, assign reviewers, track review decisions, and collaborate through a structured review process.
-
-The application was built as a take-home assignment for EasySLR with a focus on authorization, article import validation, review workflows, and project-level access control.
+ResearchHub is a collaborative research article review platform inspired by systematic literature review workflows. It enables teams to organize articles into projects, assign role-based reviewers, import and validate large datasets, track review decisions, visualize project progress through interactive dashboards, and collaborate within a secure project-level authorization model. The application emphasizes clean workflows, robust access control, scalable architecture, and an intuitive user experience for managing research reviews.
 
 ---
 
@@ -13,9 +11,9 @@ The application was built as a take-home assignment for EasySLR with a focus on 
 * [Project Overview](#project-overview)
 * [Live Application](#live-application)
 * [Video Walkthrough](#video-walkthrough)
+* [Application Walkthrough With Images](#application-walkthrough-with-images)
 * [Review Workflow](#review-workflow)
 * [Permission Model](#permission-model)
-* [Application Walkthrough With Images](#application-walkthrough-with-images)
 * [Article Import Validation](#article-import-validation)
 * [Data Model](#data-model)
 * [Live Deployment](#live-deployment)
@@ -62,81 +60,9 @@ The goal was to provide a practical workflow for screening and reviewing researc
 
 https://youtu.be/04QArVmcOWw
 
-## Review Workflow
-
-I chose a simple review workflow based on common article screening stages.
-
-Each article can be marked as:
-
-- Pending
-- Included
-- Excluded
-- Maybe
-
-Reviewers can additionally:
-
-- Set article priority (Low / Medium / High)
-- Add reviewer notes
-- Add a decision reason
-
-Viewers can view articles and review decisions but cannot modify them.
-
-This creates a clear separation between users responsible for reviewing articles and users who only need visibility into project progress.
-
----
-
-## Permission Model
-
-ResearchHub uses project-level authorization.
-
-### Organization Owner
-
-Can:
-
-- Create projects
-- Manage project members
-- Assign reviewer/viewer roles
-- Access all projects they own
-
-### Reviewer
-
-Can:
-
-- Access assigned projects
-- Review articles
-- Change status
-- Change priority
-- Add reviewer notes
-- Add decision reasons
-
-Cannot:
-
-- Add project members
-- Manage project settings
-
-### Viewer
-
-Can:
-
-- Access assigned projects
-- View articles
-- View review progress
-
-Cannot:
-
-- Modify article review data
-- Add project members
-- Change project settings
-
-Authorization is enforced on the server side through dedicated access verification helpers.
-
-Direct URL access to unauthorized projects is blocked even if a user manually enters the project URL.
-
 ---
 
 ## Application Walkthrough With Images
-
-###### * Complete Video walkthrough: https://youtu.be/04QArVmcOWw
 
 ### Landing Page
 
@@ -308,6 +234,78 @@ User search is debounced to reduce unnecessary requests while typing.
 
 ![Project workspace member management](./screenshots/members1.png)
 ![Project workspace member management](./screenshots/members2.png)
+
+## Review Workflow
+
+I chose a simple review workflow based on common article screening stages.
+
+Each article can be marked as:
+
+- Pending
+- Included
+- Excluded
+- Maybe
+
+Reviewers can additionally:
+
+- Set article priority (Low / Medium / High)
+- Add reviewer notes
+- Add a decision reason
+
+Viewers can view articles and review decisions but cannot modify them.
+
+This creates a clear separation between users responsible for reviewing articles and users who only need visibility into project progress.
+
+---
+
+## Permission Model
+
+ResearchHub uses project-level authorization.
+
+### Organization Owner
+
+Can:
+
+- Create projects
+- Manage project members
+- Assign reviewer/viewer roles
+- Access all projects they own
+
+### Reviewer
+
+Can:
+
+- Access assigned projects
+- Review articles
+- Change status
+- Change priority
+- Add reviewer notes
+- Add decision reasons
+
+Cannot:
+
+- Add project members
+- Manage project settings
+
+### Viewer
+
+Can:
+
+- Access assigned projects
+- View articles
+- View review progress
+
+Cannot:
+
+- Modify article review data
+- Add project members
+- Change project settings
+
+Authorization is enforced on the server side through dedicated access verification helpers.
+
+Direct URL access to unauthorized projects is blocked even if a user manually enters the project URL.
+
+---
 
 ## Article Import Validation
 
